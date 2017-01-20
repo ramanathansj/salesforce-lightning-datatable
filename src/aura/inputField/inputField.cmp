@@ -1,0 +1,59 @@
+<aura:component access="global">
+    <aura:attribute name="recordid" type="Id" />
+    <aura:attribute name="class" type="String" />
+    <aura:attribute access="public" name="cell" type="Object" />
+    <aura:attribute name="onclick" type="String" />
+    <aura:attribute name="format" type="String" />
+    <aura:attribute name="rendered" type="boolean" />
+    
+    	<aura:if isTrue="{!v.cell.fieldType == 'DATETIME'}"> 
+            <aura:if isTrue="{!v.cell.isWritable}">
+            	<ui:inputDateTime aura:id="datetimeid" class="field" value="{!v.cell.fieldValue}" displayDatePicker="true" langLocale="{!$Locale.language}" format="{!$Locale.dateFormat}"/>
+                <aura:set attribute="else">
+                    <lightning:formattedDateTime value="{!v.cell.unixTime}" day="2-digit" month="2-digit" year="2-digit" hour="2-digit" minute="2-digit" hour12="false"/>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+        <aura:if isTrue="{!v.cell.fieldType == 'DATE'}"> 
+            <aura:if isTrue="{!v.cell.isWritable}">
+            	<ui:inputDate aura:id="dateFieldId" value="{!v.cell.fieldValue}" displayDatePicker="true"/>
+            	<aura:set attribute="else">
+                    <ui:outputDate value="{!v.cell.fieldValue}" />
+                </aura:set>
+            </aura:if>
+        </aura:if>
+        <aura:if isTrue="{!v.cell.fieldType == 'REFERENCE'}"> 
+            {!v.cell.fieldValue}
+        </aura:if>
+        <aura:if isTrue="{!v.cell.fieldType == 'PICKLIST'}">
+            <aura:if isTrue="{!and (v.cell.isWritable, v.cell.pickValues != null) }">
+                <ui:inputSelect value="{!v.cell.fieldValue}">
+                    <aura:iteration var="pick" items="{!v.cell.pickValues}">
+                        <ui:inputSelectOption text="{!pick}"/>
+                    </aura:iteration>
+                </ui:inputSelect>
+                <aura:set attribute="else">
+                	{!v.cell.fieldValue}"
+                </aura:set>
+            </aura:if>
+    	</aura:if>
+        <aura:if isTrue="{!v.cell.fieldType == 'TEXTAREA'}">
+            <aura:if isTrue="{!(v.cell.isWritable)}">
+                <ui:inputTextArea value="{!v.cell.fieldValue}"/> 
+                <aura:set attribute="else">
+                	{!v.cell.fieldValue}"
+                </aura:set>
+            </aura:if>
+    	</aura:if>
+    	<aura:if isTrue="{!and(and(v.cell.fieldType != 'REFERENCE', v.cell.fieldType != 'DATETIME'), and(v.cell.fieldType != 'DATE', v.cell.fieldType != 'TEXTAREA'))}">
+            <aura:if isTrue="{!v.cell.isWritable}">
+                <!-- redundant aura:if expression function not handling multiple comparision correctly -->
+                <aura:if isTrue="{!v.cell.fieldType != 'PICKLIST'}">
+                	<ui:inputText value="{!v.cell.fieldValue}"/>
+                </aura:if>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.cell.fieldType != 'PICKLIST'}"> {!v.cell.fieldValue} </aura:if>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+</aura:component>

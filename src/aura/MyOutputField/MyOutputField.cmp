@@ -1,0 +1,9 @@
+<aura:component access="public">
+    <aura:attribute access="public" name="recordid" type="Id" />
+    <aura:attribute access="public" name="class" type="String" />
+    <aura:attribute access="public" name="value" type="Object" />
+    <span class="{!v.class}" onclick="{!c.click}" title="{!v.value}">
+    	{!v.value}
+	</span>
+    {!v.body}
+</aura:component>

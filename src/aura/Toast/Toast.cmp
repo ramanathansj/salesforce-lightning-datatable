@@ -1,0 +1,19 @@
+<aura:component >
+    <aura:attribute access="public" name="message" type="String" default=""/>
+    <aura:attribute access="public" name="rendered" type="boolean" default="false"/>
+    <aura:attribute access="public" name="timeoutMS" type="Integer" default="3000"/>
+    <aura:attribute name="status" type="String" default="success"/>
+    <aura:handler name="change" value="{!v.message}" action="{!c.destory}"/>
+    
+    
+    <aura:if isTrue="{!v.rendered}">
+        <div class="slds-notify_container slds-region_narrow" style="z-index:5001;position:relative">
+          <div class="{!if(v.status=='success', 'slds-notify slds-notify--alert slds-theme--success', 'slds-notify slds-notify--alert  slds-theme--error')}" role="alert">
+            <span class="slds-assistive-text">Success</span>
+            <div class="slds-col slds-align-middle">
+              <h2 class="slds-text-heading--small" >{!v.message}</h2>
+            </div>
+          </div>
+        </div>
+    </aura:if>
+</aura:component>

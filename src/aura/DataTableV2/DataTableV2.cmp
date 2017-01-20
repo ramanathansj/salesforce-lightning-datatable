@@ -1,0 +1,102 @@
+<aura:component controller="DataTableController" access="public" implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId">
+    <!-- Component base attributes like object, fields, where caluse, pagination-->
+    <!-- <aura:attribute access="public" name="fields" type="String[]" required="false" default="['Id', 'Name', 'Description']"/> -->
+    <aura:attribute access="public" name="columnfields" type="String" required="true" default="Name,AccountNumber,Industry,Phone,Owner.Name,LastModifiedDate"/>
+    <aura:attribute access="public" name="object" type="String" default="Account" required="true"/>
+    <!-- enter full where caluse of soql query -->
+    <aura:attribute access="public" name="whereclause" type="String" default=""/>
+    <aura:attribute name="columns" type="Object[]" default=""/>
+    <aura:attribute name="resultsetsize" type="Integer" default="0"/>
+    <aura:attribute name="results" type="Object[]"/>
+    <aura:attribute name="pagelimit" type="Integer" default="10"/>
+    <aura:attribute name="page" type="Integer" default="0"/>
+	<!-- related list setting -->
+    <aura:attribute name="isRelatedList" type="boolean" default="false"/>
+    <aura:attribute name="recordId" type="Id" />
+    <!-- spinner -->
+    <aura:attribute access="public" name="showspinner" type="boolean" default="true"/>
+    <!-- messages/error handling -->
+    <aura:attribute name="messages" type="String" default=""/>
+    <aura:attribute name="status" type="String" default="success"/>
+    <!-- flag to control record edit -->
+    <aura:attribute access="public" name="edit" type="Integer" default="0"/>
+    <!-- ASC DESC -->
+    <aura:attribute name="ascDescVal" type="String" default="asc"/>
+    <aura:attribute name="sortField" type="String" default="Name"/>
+    <!-- Events -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="c:PaginationEvent" action="{!c.pagerecords}"/>
+    <aura:handler event="c:MyOutputClickEvt" action="{!c.customSort}"/>
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    
+    <!-- Table Component -->
+   	<ltng:require styles="/resource/testram__SLDS24/assets/styles/salesforce-lightning-design-system.min.css"/>
+    <div class="slds slds-resizable slds-scrollable--x">
+       <!-- Spinner -->
+        <c:Spinner show="{!v.showspinner}"/>
+        <c:Toast message="{!v.messages}" status="{!v.status}" timeoutMS="4000" rendered="{!!empty(v.messages)}" />
+        <div class="c-container">
+            <lightning:layout horizontalAlign="start">
+                <lightning:layoutItem flexibility="grow" padding="around-small">
+                    <lightning:buttonIcon variant="border" onclick="{!c.showEdit}" disabled="{!v.edit == 1}" iconName="utility:edit" alternativeText="bulk edit records"/>
+                    <lightning:buttonIcon variant="border" onclick="{!c.saveRecords}" disabled="{!v.edit == 0}" iconName="utility:database" alternativeText="save records"/>
+                    <lightning:buttonIcon variant="border" onclick="{!c.cancelEdit}" disabled="{!v.edit == 0}" iconName="utility:close" alternativeText="cancel action"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+            
+        <div>
+            <!-- copy of styles from this datatable https://www.lightningdesignsystem.com/components/data-tables/ -->
+            <table class="slds-table slds-table--bordered slds-max-medium-table--stacked">
+                <thead>
+                    <tr class="slds-text-heading--label">
+                    	<aura:iteration var="colH" items="{!v.columns}">          
+                            <aura:if isTrue="{!colH.fieldApi != 'id'}">                                 
+                                <th class="slds-is-sortable slds-is-resizable slds-is-sorted  slds-cell-shrink" scope="col" aria-sort="descending" aria-label="{!colH.fieldValue}">
+                                    <span class="slds-th__action slds-text-link--reset">
+                                      <span class="slds-assistive-text">Sort </span>
+                                      <c:MyOutputField class="slds-truncate" value="{!colH.fieldValue}" recordid="{!colH.fieldApi}" />
+                                      <div class="slds-icon_container">
+                                        <aura:if isTrue="{!and(v.sortField == colH.fieldApi, v.ascDescVal == 'desc')}">
+                                           <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-is-sortable__icon" svgPath="/resource/testram__SLDS24/assets/icons/utility-sprite/svg/symbols.svg#arrowdown" category="utility" size="small" name="arrowdown" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortField == colH.fieldApi, v.ascDescVal == 'asc')}">
+                                           <c:svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-is-sortable__icon" svgPath="/resource/testram__SLDS24/assets/icons/utility-sprite/svg/symbols.svg#arrowup" category="utility" size="small" name="arrowup" />
+                                        </aura:if>
+                                        </div>
+                                      <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true">Sorted {!if(v.ascDescVal == 'asc', 'ascending', 'descending')}</span>
+                                    </span>
+                                </th>
+                            </aura:if>
+                    	</aura:iteration>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration var="row" items="{!v.results}">
+                        <tr class="slds-truncate slds-resizable">
+                        	<aura:iteration var="col" items="{!row.fields}">
+                           		<aura:if isTrue="{!col.fieldApi != 'id'}">
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                                        <aura:if isTrue="{#v.edit ==0}">
+                                            <!-- {!col.fieldValue} -->
+                                        	<c:outputField cell="{!col}"/> 
+                                        </aura:if>
+                                        <aura:if isTrue="{#v.edit == 1}">
+                                        	<c:inputField cell="{!col}"/>
+                                        </aura:if>
+                                    </td>
+                                </aura:if>
+                        	</aura:iteration> 
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+        	</table>
+    	</div>
+        <!-- Pagination Component -->
+        <div class="c-container" style="padding:10px">
+            <c:Pagination pagelimit="{!v.pagelimit}" page="{!v.page}" resultsetsize="{!v.resultsetsize}" />
+    	</div> 
+ 	</div> <!-- end of slds -->
+	    
+</aura:component>

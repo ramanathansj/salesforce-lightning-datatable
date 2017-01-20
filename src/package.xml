@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>DataTableController</members>
+        <members>DataTableController_Test</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Datatable</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>DataTableApp</members>
+        <members>DataTableV2</members>
+        <members>DatatableLntgOut</members>
+        <members>MyOutputClickEvt</members>
+        <members>MyOutputField</members>
+        <members>Pagination</members>
+        <members>PaginationEvent</members>
+        <members>Spinner</members>
+        <members>Toast</members>
+        <members>inputField</members>
+        <members>outputField</members>
+        <members>svg</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <members>Datatable_TestData_Account_V1</members>
+        <members>Datatable_TestData_Contact_V1</members>
+        <members>SLDS24</members>
+        <name>StaticResource</name>
+    </types>
+    <version>36.0</version>
+</Package>

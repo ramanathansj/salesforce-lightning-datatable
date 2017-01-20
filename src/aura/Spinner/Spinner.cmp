@@ -1,0 +1,12 @@
+<aura:component access="public">
+    <aura:attribute name="show" type="Boolean" default="true" description="Should the spinner be shown? Use this to show/hide the spinner" access="GLOBAL" />
+    <aura:if isTrue="{! v.show }">
+        <div class="slds-spinner_container">
+            <div class="slds-spinner--brand slds-spinner slds-spinner--medium slds-is-relative" style="opacity:0.5;z-index:5000;position:relative" aria-hidden="false" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,8 @@
+<design:component>
+	<design:attribute name="columnfields" label="Object Fields" description="Fields from object ex: Id, Name, Description" />
+    <design:attribute name="object" label="Object" description="Object you want to show ,  ex: Account" />
+    <design:attribute name="whereclause" label="Where Clause" description="SOQL query filter clause" />
+    <design:attribute name="pagelimit" label="Page Size" description="Page Size like 10, 20" />
+    <design:attribute name="sortField" label="Sort Field" description="Default  Sort Field" />
+    <design:attribute name="isRelatedList" label="Related List" description="Area you configuring as Related List?" />
+</design:component>

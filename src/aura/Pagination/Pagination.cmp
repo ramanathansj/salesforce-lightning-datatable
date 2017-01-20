@@ -1,0 +1,31 @@
+<aura:component >
+	<aura:attribute name="pagelimit" type="Integer" default="10"/>
+    <aura:attribute name="page" type="Integer" default="0"/>
+    <aura:attribute name="offset" type="Integer" default="0"/>
+    <aura:attribute name="resultsetsize" type="Integer" default="0"/>
+	<aura:attribute name="isLast" type="Boolean" default="false"/>
+	<aura:handler event="aura:doneRendering" action="{!c.doneRerender}"/>
+    
+	<div class="c-container" style="padding:10px">
+            <lightning:layout horizontalAlign="center">
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    <div class="slds-select_container">
+                        <select aura:id="selectpageid" class="slds-select" onchange="{!c.changepage}">
+                            <option value="">Select</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    <lightning:buttonGroup >
+                        <ui:button class="slds-button slds-button--neutral" aura:id="first" label="First" press="{!c.paginate}" disabled="{!lessthanorequal(v.offset, 0)}"/>
+                        <ui:button class="slds-button slds-button--neutral" aura:id="previous" label="Previous" press="{!c.paginate}" disabled="{!lessthanorequal(v.offset, 0)}"/>
+                        <ui:button class="slds-button slds-button--neutral" aura:id="next" label="Next" press="{!c.paginate}" disabled="{!v.isLast}"/>
+                        <ui:button class="slds-button slds-button--neutral" aura:id="last" label="Last" press="{!c.paginate}" disabled="{!v.isLast}"/>
+                    </lightning:buttonGroup>
+                </lightning:layoutItem>
+            </lightning:layout>
+    </div> 
+</aura:component>
