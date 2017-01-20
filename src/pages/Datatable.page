@@ -2,11 +2,11 @@
     <apex:includeLightning />
     <div id="datatableid" style="overflow: scroll;" />
     <script>
-    	var parms = { fields:"['Id', 'Name', 'testram__Title__c', 'testram__Case__r.CaseNumber', 'testram__Product__r.Name', 'testram__Product__r.CreatedBy.Name']", 
-                     	object:"testram__TwitterEntry__c", pagelimit:"10", sortField:"Name", 
-                     whereclause:"testram__Case__c != null AND testram__Product__c != null" };
+      var parms = { columnfields:"Name,AccountNumber,Industry,Phone,Owner.Name,LastModifiedDate", 
+                      object:"Account", pagelimit:"10", sortField:"Name", 
+                     whereclause:"" };
         $Lightning.use("testram:DatatableLntgOut", function() {
-          $Lightning.createComponent("testram:DataTableV2", {},"datatableid", function(cmp) {
+          $Lightning.createComponent("testram:DataTableV2", parms,"datatableid", function(cmp) {
             console.log("component loaded");
           });
         });
